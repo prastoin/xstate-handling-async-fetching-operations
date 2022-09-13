@@ -4,33 +4,42 @@
   </header>
   <main>
     <div>
-      <button @click="decreaseCounter">-</button>
-      <span>{{ counter }}</span>
-      <button @click="increaseCounter">+</button>
+      <button @click="decreaseCounterButtonOnClick">-</button>
+      <span>{{ counterMachineState.context.counter }}</span>
+      <button @click="increaseCounterButtonOnClick">+</button>
     </div>
   </main>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { useMachine } from '@xstate/vue';
+import { createCounterMachine } from './machines/CounterMachine';
+
+const counterMachine = createCounterMachine();
 
 export default {
   setup() {
-    const counter = ref<number>(10);
+    const { send: sendToCounterMachine, state: counterMachineState } = useMachine(counterMachine)
 
-    const decreaseCounter = () => {
-      counter.value--;
-    };
+    function decreaseCounterButtonOnClick() {
+      sendToCounterMachine({
+        type: 'User pressed descrease button'
+      })
+    }
 
-    const increaseCounter = () => {
-      counter.value++;
-    };
+    function increaseCounterButtonOnClick() {
+      sendToCounterMachine({
+        type: 'User pressed increase button'
+      })
+    }
 
+    // why does counterMachineState.context doesn't seem to exist here but does inside the vue template ?
+    console.log(counterMachineState.value)
     return {
-      counter,
-      increaseCounter,
-      decreaseCounter,
-    };
+      decreaseCounterButtonOnClick,
+      increaseCounterButtonOnClick,
+      counterMachineState
+    }
   },
 };
 </script>
