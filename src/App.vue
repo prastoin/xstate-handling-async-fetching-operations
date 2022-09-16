@@ -1,13 +1,11 @@
 <script lang="ts">
-import LoadUserInformation from './components/LoadUserInformation.vue';
+import LoadUserInformation from "./components/LoadUserInformation.vue";
 
 export default {
-    setup() {
-      return {
-
-      }
-    },
-    components: { LoadUserInformation }
+  setup() {
+    return {};
+  },
+  components: { LoadUserInformation },
 };
 </script>
 
