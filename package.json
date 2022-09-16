@@ -14,6 +14,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.5.0",
     "@xstate/vue": "^2.0.0",
     "msw": "^0.47.3",
     "redaxios": "^0.5.1",
@@ -38,5 +39,8 @@
     "typescript": "~4.7.4",
     "vite": "^3.0.9",
     "vue-tsc": "^0.40.7"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
