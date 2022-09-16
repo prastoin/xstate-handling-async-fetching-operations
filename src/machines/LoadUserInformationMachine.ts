@@ -67,10 +67,8 @@ export const createLoadUserInformationMachine = () => {
     }, {
         actions: {
             "Assign loaded user information to context": assign({
-                userInformation: (_context, e) => {
-                    const { data: userInformation } = e as DoneInvokeEvent<UserInformation>;
-
-                    return userInformation
+                userInformation: (_context, event) => {
+                    return event.data
                 }
             })
         },
