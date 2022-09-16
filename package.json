@@ -15,8 +15,10 @@
   },
   "dependencies": {
     "@xstate/vue": "^2.0.0",
+    "redaxios": "^0.5.1",
     "vue": "^3.2.38",
-    "xstate": "^4.33.6"
+    "xstate": "^4.33.6",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
