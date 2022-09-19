@@ -5,6 +5,8 @@ import { done } from "xstate/lib/actions";
 
 type LoadUserInformationMachineEvents = {
   type: "User pressed load user data button";
+} | {
+  type: "User pressed reset machine button"
 };
 
 type LoadUserInformationMachineContext = {
@@ -128,7 +130,13 @@ export const createLoadUserInformationMachine = () => {
         },
 
         "Loaded user data": {
-          type: "final"
+
+          on: {
+            "User pressed reset machine button": {
+              target: "#loadUserInformationMachine.Idle",
+              actions: "Reset machine context"
+            }
+          }
         }
       },
     },
@@ -143,6 +151,11 @@ export const createLoadUserInformationMachine = () => {
           userCart: (_context, event) => {
             return event.data
           }
+        }),
+
+        "Reset machine context": assign({
+          userCart: (_context, _event) => undefined,
+          userInformation: (_context, _event) => undefined
         })
       },
       services: {

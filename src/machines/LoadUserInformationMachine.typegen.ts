@@ -28,6 +28,7 @@ export interface Typegen0 {
   eventsCausingActions: {
     "Assign loaded user cart to context": "done.invoke.loadUserInformationMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
     "Assign loaded user information to context": "done.invoke.loadUserInformationMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
+    "Reset machine context": "User pressed reset machine button";
   };
   eventsCausingServices: {
     "Fetch user cart": "User pressed load user data button";

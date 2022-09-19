@@ -9,6 +9,14 @@ export const handlers = [
       console.log("/user-information mock hit");
       sessionStorage.setItem("is-authenticated", "true");
 
+      const shouldFail = faker.datatype.boolean()
+      if (shouldFail) {
+        return res(
+          ctx.delay(2000),
+          ctx.status(403)
+        );
+      }
+
       return res(
         ctx.delay(1000),
         ctx.status(200),
@@ -27,11 +35,14 @@ export const handlers = [
     (_req, res, ctx) => {
       console.log("/user-cart mock hit");
       sessionStorage.setItem("is-authenticated", "true");
-      
-      // return res(
-      //   ctx.delay(2000),
-      //   ctx.status(403)
-      // );
+
+      const shouldFail = faker.datatype.boolean()
+      if (shouldFail) {
+        return res(
+          ctx.delay(2000),
+          ctx.status(403)
+        );
+      }
 
       return res(
         ctx.delay(2000),

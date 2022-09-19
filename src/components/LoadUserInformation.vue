@@ -15,6 +15,12 @@ function loadUserInformationButtonOnClick() {
   });
 }
 
+function sendResetContextToMachine() {
+  sendToCounterMachine({
+    type: "User pressed reset machine button"
+  })
+}
+
 const isLoading = computed(
   () =>
     loadUserDataMachineState.value.hasTag("Currently loading")
@@ -56,8 +62,22 @@ const finishedLoadingUserCart = computed(() => loadUserDataMachineState.value.ha
         <template v-if="finishedLoadingUserInformation">
           User Information have been loaded
         </template>
+
         <template v-else>
-          User Information {{loadUserInformationFailed ? "Failed" : "Loading..." }}
+
+          <template v-if="loadUserInformationFailed">
+            <div class="flex">
+              <span>User Information Failed</span>
+              <button @click="loadUserInformationButtonOnClick">
+                Retry
+              </button>
+            </div>
+          </template>
+
+          <template v-else>
+            User Information Loading...
+          </template>
+
         </template>
       </span>
 
@@ -67,7 +87,20 @@ const finishedLoadingUserCart = computed(() => loadUserDataMachineState.value.ha
           User cart has been loaded
         </template>
         <template v-else>
-          User Cart {{loadUserCartFailed ? "Failed" : "Loading..." }}
+
+          <template v-if="loadUserCartFailed">
+            <div class="flex">
+              <span>User cart Failed</span>
+              <button @click="loadUserInformationButtonOnClick">
+                Retry
+              </button>
+            </div>
+          </template>
+
+          <template v-else>
+            User cart Loading...
+          </template>
+
         </template>
       </span>
 
@@ -79,6 +112,7 @@ const finishedLoadingUserCart = computed(() => loadUserDataMachineState.value.ha
       <span class="mb-12">Reached final state</span>
       <span class="mb-12">{{ loadUserDataMachineState.context.userInformation }}</span>
       <span class="mb-12">{{ loadUserDataMachineState.context.userCart }}</span>
+      <button @click="sendResetContextToMachine">Reset the machine</button>
     </template>
 
   </div>
