@@ -1,13 +1,15 @@
-import { fetchUserInformation } from "@/services/UserService";
-import type { UserInformation } from "@/type";
+import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
+import type { UserCart, UserInformation } from "@/type";
 import { assign, createMachine } from "xstate";
+import { done } from "xstate/lib/actions";
 
 type LoadUserInformationMachineEvents = {
-  type: "User pressed load user information button";
+  type: "User pressed load user data button";
 };
 
 type LoadUserInformationMachineContext = {
   userInformation?: UserInformation;
+  userCart?: UserCart;
 };
 
 export const createLoadUserInformationMachine = () => {
@@ -17,10 +19,13 @@ export const createLoadUserInformationMachine = () => {
       tsTypes: {} as import("./LoadUserInformationMachine.typegen").Typegen0,
       schema: {
         services: {} as {
-          "Loading user information from server": {
+          "Fetch user information": {
             // The data that gets returned from the service
             data: UserInformation;
           };
+          "Fetch user cart": {
+            data: UserCart
+          }
         },
         events: {} as LoadUserInformationMachineEvents,
         context: {} as LoadUserInformationMachineContext,
@@ -32,38 +37,94 @@ export const createLoadUserInformationMachine = () => {
       states: {
         Idle: {
           on: {
-            "User pressed load user information button": {
-              target: "Loading user information from server",
+            "User pressed load user data button": {
+              target: "Load user data",
             },
           },
         },
 
-        "Loading user information from server": {
-          invoke: {
-            src: "Loading user information from server",
-
-            onDone: {
-              target: "Loaded user information",
-              actions: "Assign loaded user information to context",
-            },
-
-            onError: {
-              target: "Loading user information failed",
-            },
+        "Load user data": {
+          tags: "Currently loading",
+          type: "parallel",
+          onDone: {
+            target: "Loaded user data"
           },
-        },
 
-        "Loading user information failed": {
-          on: {
-            "User pressed load user information button": {
-              target: "Loading user information from server",
+          states: {
+
+            "Loading user information": {
+              initial: "Fetching user information from server",
+              states: {
+
+                "Fetching user information from server": {
+                  invoke: {
+                    src: "Fetch user information",
+
+                    onDone: {
+                      target: "Loaded user information",
+                      actions: "Assign loaded user information to context",
+                    },
+
+                    onError: {
+                      target: "Loading user information failed",
+                    },
+                  },
+                },
+
+                "Loading user information failed": {
+                  // should retry for specific data only
+                  on: {
+                    "User pressed load user data button": {
+                      target: "Fetching user information from server",
+                    },
+                  },
+                },
+
+                "Loaded user information": {
+                  type: "final",
+                },
+              }
             },
-          },
+
+            "Load user cart": {
+              initial: "Fetching user cart from server",
+              states: {
+
+                "Fetching user cart from server": {
+                  invoke: {
+                    src: "Fetch user cart",
+
+                    onDone: {
+                      target: "Loaded user cart",
+                      actions: "Assign loaded user cart to context",
+                    },
+
+                    onError: {
+                      target: "Loading user cart failed",
+                    },
+                  },
+                },
+
+                "Loading user cart failed": {
+                  // should retry for specific data only
+                  on: {
+                    "User pressed load user data button": {
+                      target: "Fetching user cart from server",
+                    },
+                  },
+                },
+
+                "Loaded user cart": {
+                  type: "final",
+                },
+              }
+            }
+          }
         },
 
-        "Loaded user information": {
-          type: "final",
-        },
+        "Loaded user data": {
+          type: "final"
+        }
       },
     },
     {
@@ -73,10 +134,17 @@ export const createLoadUserInformationMachine = () => {
             return event.data;
           },
         }),
+        "Assign loaded user cart to context": assign({
+          userCart: (_context, event) => {
+            return event.data
+          }
+        })
       },
       services: {
-        "Loading user information from server": async () =>
+        "Fetch user information": async () =>
           await fetchUserInformation(),
+        "Fetch user cart": async () =>
+          await fetchUserCart()
       },
     }
   );
