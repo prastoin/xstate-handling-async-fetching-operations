@@ -28,6 +28,11 @@ export const handlers = [
       console.log("/user-cart mock hit");
       sessionStorage.setItem("is-authenticated", "true");
       
+      // return res(
+      //   ctx.delay(2000),
+      //   ctx.status(403)
+      // );
+
       return res(
         ctx.delay(2000),
         ctx.status(200),

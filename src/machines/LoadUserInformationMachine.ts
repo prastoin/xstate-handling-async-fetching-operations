@@ -32,6 +32,7 @@ export const createLoadUserInformationMachine = () => {
       },
       context: {
         userInformation: undefined,
+        userCart: undefined,
       },
       initial: "Idle",
       states: {
@@ -72,6 +73,7 @@ export const createLoadUserInformationMachine = () => {
                 },
 
                 "Loading user information failed": {
+                  tags: "Loading user information failed",
                   // should retry for specific data only
                   on: {
                     "User pressed load user data button": {
@@ -81,6 +83,7 @@ export const createLoadUserInformationMachine = () => {
                 },
 
                 "Loaded user information": {
+                  tags: "Finished loading user information",
                   type: "final",
                 },
               }
@@ -106,6 +109,7 @@ export const createLoadUserInformationMachine = () => {
                 },
 
                 "Loading user cart failed": {
+                  tags: "Loading user cart failed",
                   // should retry for specific data only
                   on: {
                     "User pressed load user data button": {
@@ -115,6 +119,7 @@ export const createLoadUserInformationMachine = () => {
                 },
 
                 "Loaded user cart": {
+                  tags: "Finished loading user cart",
                   type: "final",
                 },
               }

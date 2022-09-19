@@ -5,7 +5,7 @@ import { useMachine } from "@xstate/vue";
 
 const loadUserInformationMachine = createLoadUserInformationMachine();
 
-const { send: sendToCounterMachine, state: loadUserInformationState } =
+const { send: sendToCounterMachine, state: loadUserDataMachineState } =
   useMachine(loadUserInformationMachine);
 
 function loadUserInformationButtonOnClick() {
@@ -17,31 +17,69 @@ function loadUserInformationButtonOnClick() {
 
 const isLoading = computed(
   () =>
-    loadUserInformationState.value.hasTag("Currently loading")
+    loadUserDataMachineState.value.hasTag("Currently loading")
 );
-const showLoadUserInformationButton = computed(
+const showLoadUserDataButton = computed(
   () =>
-    loadUserInformationState.value.value === "Idle" ||
-    loadUserInformationState.value.value === "Loading user information failed"
+    loadUserDataMachineState.value.value === "Idle" ||
+    loadUserDataMachineState.value.value === "Loading user information failed"
 );
+
+const loadUserCartFailed = computed(() => loadUserDataMachineState.value.hasTag("Loading user cart failed"))
+const loadUserInformationFailed = computed(() => loadUserDataMachineState.value.hasTag("Loading user information failed"))
+const finishedLoadingUserInformation = computed(() => loadUserDataMachineState.value.hasTag("Finished loading user information"))
+const finishedLoadingUserCart = computed(() => loadUserDataMachineState.value.hasTag("Finished loading user cart"))
 </script>
 
 <template>
   <div class="flex flex-col">
-    <template v-if="showLoadUserInformationButton">
-      <span>{{ loadUserInformationState.value }}</span>
+    <template v-if="showLoadUserDataButton">
       <button @click="loadUserInformationButtonOnClick">
-        Load user information
+        Load user Data
       </button>
+      <p>
+      <h4>Will be downloaded:</h4>
+      <ul>
+        <li>
+          User Information (id, name, email, etc.)
+        </li>
+        <li>
+          User Cart (items, credit, etc.)
+        </li>
+      </ul>
+      </p>
     </template>
+
     <template v-else-if="isLoading">
-      <span>{{ loadUserInformationState.value }}</span>
-      <span>Loading...</span>
+
+      <span class="mb-12">
+        <template v-if="finishedLoadingUserInformation">
+          User Information have been loaded
+        </template>
+        <template v-else>
+          User Information {{loadUserInformationFailed ? "Failed" : "Loading..." }}
+        </template>
+      </span>
+
+
+      <span class="mb-12">
+        <template v-if="finishedLoadingUserCart">
+          User cart has been loaded
+        </template>
+        <template v-else>
+          User Cart {{loadUserCartFailed ? "Failed" : "Loading..." }}
+        </template>
+      </span>
+
+      <span>
+      </span>
     </template>
+
     <template v-else>
-      <span class="mb-12">{{ loadUserInformationState.value }}</span>
-      <span class="mb-12">{{ loadUserInformationState.context.userInformation }}</span>
-      <span class="mb-12">{{ loadUserInformationState.context.userCart }}</span>
+      <span class="mb-12">Reached final state</span>
+      <span class="mb-12">{{ loadUserDataMachineState.context.userInformation }}</span>
+      <span class="mb-12">{{ loadUserDataMachineState.context.userCart }}</span>
     </template>
+
   </div>
 </template>
