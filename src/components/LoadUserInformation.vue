@@ -11,14 +11,13 @@ const { send: sendToCounterMachine, state: loadUserInformationState } =
 function loadUserInformationButtonOnClick() {
   console.log("loadUserInformationButtonOnClick");
   sendToCounterMachine({
-    type: "User pressed load user information button",
+    type: "User pressed load user data button",
   });
 }
 
 const isLoading = computed(
   () =>
-    loadUserInformationState.value.value ===
-    "Loading user information from server"
+    loadUserInformationState.value.hasTag("Currently loading")
 );
 const showLoadUserInformationButton = computed(
   () =>
@@ -28,7 +27,7 @@ const showLoadUserInformationButton = computed(
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col">
     <template v-if="showLoadUserInformationButton">
       <span>{{ loadUserInformationState.value }}</span>
       <button @click="loadUserInformationButtonOnClick">
@@ -40,8 +39,9 @@ const showLoadUserInformationButton = computed(
       <span>Loading...</span>
     </template>
     <template v-else>
-      <span>{{ loadUserInformationState.value }}</span>
-      <span>{{ loadUserInformationState.context.userInformation }}</span>
+      <span class="mb-12">{{ loadUserInformationState.value }}</span>
+      <span class="mb-12">{{ loadUserInformationState.context.userInformation }}</span>
+      <span class="mb-12">{{ loadUserInformationState.context.userCart }}</span>
     </template>
   </div>
 </template>
