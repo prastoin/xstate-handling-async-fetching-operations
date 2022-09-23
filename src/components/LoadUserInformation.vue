@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { createLoadUserInformationMachine } from "@/machines/LoadUserInformationMachine";
+import { createLoadUserDataInvokingPromises } from "@/machines/LoadUserDataWithPromiseMachine";
 import { computed } from "vue";
 import { useMachine } from "@xstate/vue";
 
-const loadUserInformationMachine = createLoadUserInformationMachine();
+const loadUserDataWithPromisesMachine = createLoadUserDataInvokingPromises();
 
 const { send: sendToCounterMachine, state: loadUserDataMachineState } =
-  useMachine(loadUserInformationMachine);
+  useMachine(loadUserDataWithPromisesMachine);
 
 function loadUserInformationButtonOnClick() {
   console.log("loadUserInformationButtonOnClick");
