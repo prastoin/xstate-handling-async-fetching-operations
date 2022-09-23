@@ -11,9 +11,15 @@ export default {
 
 <template>
   <header class="mb-12">
-    <h1>x-state-handling-async-fetching-operations</h1>
+    <h1>XState handling async operations invoking Promises</h1>
+    <small>See related <a href="https://xstate.js.org/docs/guides/communication.html#invoking-promises">Documentation</a></small>
   </header>
-  <main>
+  <main style="
+    margin-top: 12px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  ">
     <LoadUserInformation />
   </main>
 </template>
