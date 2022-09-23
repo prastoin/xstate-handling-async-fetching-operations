@@ -38,73 +38,82 @@ const finishedLoadingUserCart = computed(() => loadUserDataMachineState.value.ha
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column">
-    <template v-if="showLoadUserDataButton">
-      <button style="margin: auto" @click="loadUserInformationButtonOnClick">
-        Load user Data
-      </button>
-      <p>
-      <h4>Will be downloaded:</h4>
-      <ul>
-        <li>
-          User Information (id, name, email, etc.)
-        </li>
-        <li>
-          User Cart (items, credit, etc.)
-        </li>
-      </ul>
-      </p>
-    </template>
-
-    <template v-else-if="isLoading">
-
-      <span class="mb-12">
-        <template v-if="finishedLoadingUserInformation">
-          User Information have been loaded
-        </template>
-
-        <template v-else>
-          <template v-if="loadUserInformationFailed">
-            <span>User Information Failed</span>
-          </template>
-
-          <template v-else>
-            User Information Loading...
-          </template>
-        </template>
-      </span>
-
-
-      <span class="mb-12">
-        <template v-if="finishedLoadingUserCart">
-          User cart has been loaded
-        </template>
-        
-        <template v-else>
-          <template v-if="loadUserCartFailed">
-            <span>User cart Failed</span>
-          </template>
-
-          <template v-else>
-            User cart Loading...
-          </template>
-        </template>
-      </span>
-
-      <template v-if="loadUserInformationFailed || loadUserCartFailed">
-        <button @click="loadUserInformationButtonOnClick">
-          Retry
+  <main style="
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+  ">
+    <div data-cy="machine-current-value">{{loadUserDataMachineState.value}}</div>
+    <div style="display: flex; flex-direction: column">
+      <template v-if="showLoadUserDataButton">
+        <button style="margin: auto" @click="loadUserInformationButtonOnClick">
+          Load user Data
         </button>
+        <p>
+        <h4>Will be downloaded:</h4>
+        <ul>
+          <li>
+            User Information (id, name, email, etc.)
+          </li>
+          <li>
+            User Cart (items, credit, etc.)
+          </li>
+        </ul>
+        </p>
       </template>
 
-    </template>
+      <template v-else-if="isLoading">
 
-    <template v-else>
-      <span class="mb-12">Reached final state</span>
-      <span class="mb-12">{{ loadUserDataMachineState.context.userInformation }}</span>
-      <span class="mb-12">{{ loadUserDataMachineState.context.userCart }}</span>
-      <button style="margin: auto" @click="sendResetContextToMachine">Reset the machine</button>
-    </template>
+        <span class="mb-12">
+          <template v-if="finishedLoadingUserInformation">
+            User Information have been loaded
+          </template>
 
-  </div>
+          <template v-else>
+            <template v-if="loadUserInformationFailed">
+              <span>User Information Failed</span>
+            </template>
+
+            <template v-else>
+              User Information Loading...
+            </template>
+          </template>
+        </span>
+
+
+        <span class="mb-12">
+          <template v-if="finishedLoadingUserCart">
+            User cart has been loaded
+          </template>
+
+          <template v-else>
+            <template v-if="loadUserCartFailed">
+              <span>User cart Failed</span>
+            </template>
+
+            <template v-else>
+              User cart Loading...
+            </template>
+          </template>
+        </span>
+
+        <template v-if="loadUserInformationFailed || loadUserCartFailed">
+          <button @click="loadUserInformationButtonOnClick">
+            Retry
+          </button>
+        </template>
+
+      </template>
+
+      <template v-else>
+        <span class="mb-12">Reached final state</span>
+        <span class="mb-12">{{ loadUserDataMachineState.context.userInformation }}</span>
+        <span class="mb-12">{{ loadUserDataMachineState.context.userCart }}</span>
+        <button style="margin: auto" @click="sendResetContextToMachine">Reset the machine</button>
+      </template>
+
+    </div>
+  </main>
 </template>
