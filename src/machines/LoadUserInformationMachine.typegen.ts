@@ -64,7 +64,6 @@ export interface Typegen0 {
             };
       };
   tags:
-    | "Currently loading"
     | "Loading user cart"
     | "Loading user cart failed"
     | "Loading user information"

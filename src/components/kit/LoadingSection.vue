@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import type { stat } from 'fs';
-import { watch, ref, watchEffect } from 'vue';
 
 export type StatusLabel = 'loading' | 'failed' | 'success';
 export interface BaseSectionProp {
-    status?: StatusLabel
+    status: StatusLabel
     label: string
 }
-const styleToApplyRef = ref<string>("")
 const props = defineProps<BaseSectionProp>()
-const status = computed<StatusLabel | undefined>(() => props.status);
-const {label} = props
 
 function getSectionStyleToApply(status?: StatusLabel) {
     switch (status) {
@@ -24,38 +19,30 @@ function getSectionStyleToApply(status?: StatusLabel) {
         case "success": {
             return 'bg-green-500 hover:bg-green-400'
         }
-        case undefined: {
-            return ''
-        }
         default: {
             throw new Error('Encountered unknown status value')
         }
     }
 }
-
-watchEffect(() => {
-    styleToApplyRef.value = getSectionStyleToApply(status.value)
-})
+const styleToApply = computed(() => getSectionStyleToApply(props.status))
 </script>
     
 <template>
-    <span class="mb-2">
 
-        <section v-bind:class="styleToApplyRef"
-            class="w-full inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white   transition ease-in-out duration-150">
+    <section v-bind:class="styleToApply"
+        class="mb-2 w-fit inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white   transition ease-in-out duration-150">
 
-            <svg v-if="status === 'loading'" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                </circle>
-                <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                </path>
-            </svg>
+        <svg v-if="props.status === 'loading'" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+            </circle>
+            <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+        </svg>
 
-            {{ `${label} ${status}` }}
-        </section>
+        {{ `${props.label} ${props.status}` }}
+    </section>
 
 
-    </span>
 </template>

@@ -1,7 +1,6 @@
 import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
 import type { UserCart, UserInformation } from "@/type";
 import { assign, createMachine } from "xstate";
-import { done } from "xstate/lib/actions";
 
 type LoadUserInformationMachineEvents = {
   type: "User pressed load user data button";
@@ -47,7 +46,6 @@ export const createLoadUserInformationMachine = () => {
         },
 
         "Load user data": {
-          tags: "Currently loading",
           type: "parallel",
           onDone: {
             target: "Loaded user data"
@@ -78,7 +76,6 @@ export const createLoadUserInformationMachine = () => {
 
                 "Loading user information failed": {
                   tags: "Loading user information failed",
-                  // should retry for specific data only
                   on: {
                     "User pressed load user data button": {
                       target: "Fetching user information from server",
@@ -115,7 +112,6 @@ export const createLoadUserInformationMachine = () => {
 
                 "Loading user cart failed": {
                   tags: "Loading user cart failed",
-                  // should retry for specific data only
                   on: {
                     "User pressed load user data button": {
                       target: "Fetching user cart from server",

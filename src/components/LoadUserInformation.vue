@@ -3,7 +3,7 @@ export interface Props {
   status: 'failed' | 'loading' | 'success'
 }
 import { createLoadUserInformationMachine } from "@/machines/LoadUserInformationMachine";
-import { computed, ref, watchEffect } from "vue";
+import { computed } from "vue";
 import { useMachine } from "@xstate/vue";
 import LoadingSection, { type StatusLabel } from "./kit/LoadingSection.vue";
 import BaseButton from "./kit/BaseButton.vue";
@@ -30,35 +30,32 @@ const showLoadUserDataButton = computed(
     loadUserDataMachineState.value.value === "Idle"
 );
 
-const userInformationStatus = ref<StatusLabel | undefined>(undefined)
-watchEffect(() => {
+function getUserInformationStatus(): StatusLabel {
   if (loadUserDataMachineState.value.hasTag("Loading user information failed")) {
-    userInformationStatus.value = 'failed'
-    return
+    return 'failed'
   }
 
   if (loadUserDataMachineState.value.hasTag("Loading user information")) {
-    userInformationStatus.value = 'loading'
-    return
+
+    return 'loading'
   }
 
-  userInformationStatus.value = 'success'
-})
+  return 'success'
+}
+const userInformationStatus = computed(() => getUserInformationStatus())
 
-const userCartStatus = ref<StatusLabel | undefined>(undefined)
-watchEffect(() => {
+const userCartStatus = computed(() => getUserCartStatus())
+function getUserCartStatus(): StatusLabel {
   if (loadUserDataMachineState.value.hasTag("Loading user cart failed")) {
-    userCartStatus.value = 'failed'
-    return
+    return 'failed'
   }
 
   if (loadUserDataMachineState.value.hasTag("Loading user cart")) {
-    userCartStatus.value = 'loading'
-    return
+    return 'loading'
   }
 
-  userCartStatus.value = 'success'
-})
+  return 'success'
+}
 </script>
 
 <template>
@@ -84,18 +81,19 @@ watchEffect(() => {
 
       <template v-else>
 
-        <LoadingSection v-bind:status="userInformationStatus" label="User Information" />
+        <div class="flex flex-col justify-center items-start m-auto">
+          <LoadingSection v-bind:status="userInformationStatus" label="User Information" />
 
-        <LoadingSection v-bind:status="userCartStatus" label="User Cart" />
+          <LoadingSection v-bind:status="userCartStatus" label="User Cart" />
 
-        <template v-if="userInformationStatus === 'failed' || userCartStatus === 'failed'">
-          <BaseButton @click="loadUserInformationButtonOnClick">
-            Retry
-          </BaseButton>
-        </template>
+          <template v-if="userInformationStatus === 'failed' || userCartStatus === 'failed'">
+            <BaseButton @click="loadUserInformationButtonOnClick">
+              Retry
+            </BaseButton>
+          </template>
+        </div>
 
-
-        <template v-else-if="userInformationStatus ===  'success' && userCartStatus === 'success'">
+        <template v-if="userInformationStatus ===  'success' && userCartStatus === 'success'">
           <span class="mb-2">Reached final state</span>
           <span class="mb-2">{{ loadUserDataMachineState.context.userInformation }}</span>
           <span class="mb-2">{{ loadUserDataMachineState.context.userCart }}</span>
