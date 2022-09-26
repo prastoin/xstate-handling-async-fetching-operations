@@ -42,8 +42,7 @@ watchEffect(() => {
     <span class="mb-2">
 
         <section v-bind:class="styleToApplyRef"
-            class="w-full inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white   transition ease-in-out duration-150 cursor-not-allowed"
-            disabled>
+            class="w-full inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white   transition ease-in-out duration-150">
 
             <svg v-if="status === 'loading'" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">

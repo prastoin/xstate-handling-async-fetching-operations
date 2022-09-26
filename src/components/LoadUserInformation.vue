@@ -6,6 +6,7 @@ import { createLoadUserInformationMachine } from "@/machines/LoadUserInformation
 import { computed, ref, watchEffect } from "vue";
 import { useMachine } from "@xstate/vue";
 import LoadingSection, { type StatusLabel } from "./kit/LoadingSection.vue";
+import BaseButton from "./kit/BaseButton.vue";
 
 const loadUserInformationMachine = createLoadUserInformationMachine();
 
@@ -62,12 +63,12 @@ watchEffect(() => {
 
 <template>
   <main class="flex flex-col justify-start items-center mt-6">
-    <div data-cy="machine-current-value">{{loadUserDataMachineState.value}}</div>
+    <!-- <div data-cy="machine-current-value">{{loadUserDataMachineState.value}}</div> -->
     <div class="flex flex-col">
       <template v-if="showLoadUserDataButton">
         <p>
         <h4>Will be downloaded:</h4>
-        <ul>
+        <ul class="list-disc">
           <li>
             User Information (id, name, email, etc.)
           </li>
@@ -76,10 +77,9 @@ watchEffect(() => {
           </li>
         </ul>
         </p>
-        <button class="m-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          @click="loadUserInformationButtonOnClick">
+        <BaseButton @click="loadUserInformationButtonOnClick">
           Load user Data
-        </button>
+        </BaseButton>
       </template>
 
       <template v-else>
@@ -89,10 +89,9 @@ watchEffect(() => {
         <LoadingSection v-bind:status="userCartStatus" label="User Cart" />
 
         <template v-if="userInformationStatus === 'failed' || userCartStatus === 'failed'">
-          <button @click="loadUserInformationButtonOnClick"
-            class="m-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+          <BaseButton @click="loadUserInformationButtonOnClick">
             Retry
-          </button>
+          </BaseButton>
         </template>
 
 
@@ -100,10 +99,9 @@ watchEffect(() => {
           <span class="mb-2">Reached final state</span>
           <span class="mb-2">{{ loadUserDataMachineState.context.userInformation }}</span>
           <span class="mb-2">{{ loadUserDataMachineState.context.userCart }}</span>
-          <button @click="sendResetContextToMachine"
-            class="m-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+          <BaseButton @click="sendResetContextToMachine">
             Reset the machine
-          </button>
+          </BaseButton>
         </template>
 
       </template>
