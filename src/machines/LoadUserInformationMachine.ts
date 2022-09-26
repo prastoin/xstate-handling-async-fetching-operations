@@ -1,7 +1,6 @@
 import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
 import type { UserCart, UserInformation } from "@/type";
 import { assign, createMachine } from "xstate";
-import { done } from "xstate/lib/actions";
 
 type LoadUserInformationMachineEvents = {
   type: "User pressed load user data button";
@@ -47,7 +46,6 @@ export const createLoadUserInformationMachine = () => {
         },
 
         "Load user data": {
-          tags: "Currently loading",
           type: "parallel",
           onDone: {
             target: "Loaded user data"
@@ -60,6 +58,8 @@ export const createLoadUserInformationMachine = () => {
               states: {
 
                 "Fetching user information from server": {
+                  tags: "Loading user information",
+
                   invoke: {
                     src: "Fetch user information",
 
@@ -76,7 +76,6 @@ export const createLoadUserInformationMachine = () => {
 
                 "Loading user information failed": {
                   tags: "Loading user information failed",
-                  // should retry for specific data only
                   on: {
                     "User pressed load user data button": {
                       target: "Fetching user information from server",
@@ -85,7 +84,6 @@ export const createLoadUserInformationMachine = () => {
                 },
 
                 "Loaded user information": {
-                  tags: "Finished loading user information",
                   type: "final",
                 },
               }
@@ -96,6 +94,8 @@ export const createLoadUserInformationMachine = () => {
               states: {
 
                 "Fetching user cart from server": {
+                  tags: "Loading user cart",
+
                   invoke: {
                     src: "Fetch user cart",
 
@@ -112,7 +112,6 @@ export const createLoadUserInformationMachine = () => {
 
                 "Loading user cart failed": {
                   tags: "Loading user cart failed",
-                  // should retry for specific data only
                   on: {
                     "User pressed load user data button": {
                       target: "Fetching user cart from server",
@@ -121,7 +120,6 @@ export const createLoadUserInformationMachine = () => {
                 },
 
                 "Loaded user cart": {
-                  tags: "Finished loading user cart",
                   type: "final",
                 },
               }

@@ -1,7 +1,12 @@
 <script setup lang="ts">
+export interface Props {
+  status: 'failed' | 'loading' | 'success'
+}
 import { createLoadUserInformationMachine } from "@/machines/LoadUserInformationMachine";
 import { computed } from "vue";
 import { useMachine } from "@xstate/vue";
+import LoadingSection, { type StatusLabel } from "./kit/LoadingSection.vue";
+import BaseButton from "./kit/BaseButton.vue";
 
 const loadUserInformationMachine = createLoadUserInformationMachine();
 
@@ -9,7 +14,6 @@ const { send: sendToCounterMachine, state: loadUserDataMachineState } =
   useMachine(loadUserInformationMachine);
 
 function loadUserInformationButtonOnClick() {
-  console.log("loadUserInformationButtonOnClick");
   sendToCounterMachine({
     type: "User pressed load user data button",
   });
@@ -21,99 +25,86 @@ function sendResetContextToMachine() {
   })
 }
 
-const isLoading = computed(
-  () =>
-    loadUserDataMachineState.value.hasTag("Currently loading")
-);
 const showLoadUserDataButton = computed(
   () =>
-    loadUserDataMachineState.value.value === "Idle" ||
-    loadUserDataMachineState.value.value === "Loading user information failed"
+    loadUserDataMachineState.value.value === "Idle"
 );
 
-const loadUserCartFailed = computed(() => loadUserDataMachineState.value.hasTag("Loading user cart failed"))
-const loadUserInformationFailed = computed(() => loadUserDataMachineState.value.hasTag("Loading user information failed"))
-const finishedLoadingUserInformation = computed(() => loadUserDataMachineState.value.hasTag("Finished loading user information"))
-const finishedLoadingUserCart = computed(() => loadUserDataMachineState.value.hasTag("Finished loading user cart"))
+function getUserInformationStatus(): StatusLabel {
+  if (loadUserDataMachineState.value.hasTag("Loading user information failed")) {
+    return 'failed'
+  }
+
+  if (loadUserDataMachineState.value.hasTag("Loading user information")) {
+
+    return 'loading'
+  }
+
+  return 'success'
+}
+const userInformationStatus = computed(() => getUserInformationStatus())
+
+const userCartStatus = computed(() => getUserCartStatus())
+function getUserCartStatus(): StatusLabel {
+  if (loadUserDataMachineState.value.hasTag("Loading user cart failed")) {
+    return 'failed'
+  }
+
+  if (loadUserDataMachineState.value.hasTag("Loading user cart")) {
+    return 'loading'
+  }
+
+  return 'success'
+}
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <template v-if="showLoadUserDataButton">
-      <button @click="loadUserInformationButtonOnClick">
-        Load user Data
-      </button>
-      <p>
-      <h4>Will be downloaded:</h4>
-      <ul>
-        <li>
-          User Information (id, name, email, etc.)
-        </li>
-        <li>
-          User Cart (items, credit, etc.)
-        </li>
-      </ul>
-      </p>
-    </template>
+  <main class="flex flex-col justify-start items-center mt-6">
+    <!-- <div data-cy="machine-current-value">{{loadUserDataMachineState.value}}</div> -->
+    <div class="flex flex-col">
+      <template v-if="showLoadUserDataButton">
+        <p>
+        <h4>Will be downloaded:</h4>
+        <ul class="list-disc">
+          <li>
+            User Information (id, name, email, etc.)
+          </li>
+          <li>
+            User Cart (items, credit, etc.)
+          </li>
+        </ul>
+        </p>
+        <BaseButton @click="loadUserInformationButtonOnClick">
+          Load user Data
+        </BaseButton>
+      </template>
 
-    <template v-else-if="isLoading">
+      <template v-else>
 
-      <span class="mb-12">
-        <template v-if="finishedLoadingUserInformation">
-          User Information have been loaded
+        <div class="flex flex-col justify-center items-start m-auto">
+          <LoadingSection v-bind:status="userInformationStatus" label="User Information" />
+
+          <LoadingSection v-bind:status="userCartStatus" label="User Cart" />
+
+          <template v-if="userInformationStatus === 'failed' || userCartStatus === 'failed'">
+            <BaseButton @click="loadUserInformationButtonOnClick">
+              Retry
+            </BaseButton>
+          </template>
+        </div>
+
+        <template v-if="userInformationStatus ===  'success' && userCartStatus === 'success'">
+          <span class="mb-2">Reached final state</span>
+          <span class="mb-2">{{ loadUserDataMachineState.context.userInformation }}</span>
+          <span class="mb-2">{{ loadUserDataMachineState.context.userCart }}</span>
+          <BaseButton @click="sendResetContextToMachine">
+            Reset the machine
+          </BaseButton>
         </template>
 
-        <template v-else>
-
-          <template v-if="loadUserInformationFailed">
-            <div class="flex">
-              <span>User Information Failed</span>
-              <button @click="loadUserInformationButtonOnClick">
-                Retry
-              </button>
-            </div>
-          </template>
-
-          <template v-else>
-            User Information Loading...
-          </template>
-
-        </template>
-      </span>
+      </template>
 
 
-      <span class="mb-12">
-        <template v-if="finishedLoadingUserCart">
-          User cart has been loaded
-        </template>
-        <template v-else>
-
-          <template v-if="loadUserCartFailed">
-            <div class="flex">
-              <span>User cart Failed</span>
-              <button @click="loadUserInformationButtonOnClick">
-                Retry
-              </button>
-            </div>
-          </template>
-
-          <template v-else>
-            User cart Loading...
-          </template>
-
-        </template>
-      </span>
-
-      <span>
-      </span>
-    </template>
-
-    <template v-else>
-      <span class="mb-12">Reached final state</span>
-      <span class="mb-12">{{ loadUserDataMachineState.context.userInformation }}</span>
-      <span class="mb-12">{{ loadUserDataMachineState.context.userCart }}</span>
-      <button @click="sendResetContextToMachine">Reset the machine</button>
-    </template>
-
-  </div>
+    </div>
+  </main>
 </template>

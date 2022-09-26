@@ -10,37 +10,16 @@ export default {
 </script>
 
 <template>
-  <header class="mb-12">
-    <h1>x-state-handling-async-fetching-operations</h1>
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold underline">XState handling async operations invoking Promises</h1>
+    <small>See related <a class="underline"
+        href="https://xstate.js.org/docs/guides/communication.html#invoking-promises">Documentation</a></small>
   </header>
-  <main>
-    <LoadUserInformation />
-  </main>
+  <LoadUserInformation />
 </template>
 
 <style>
-.flex {
-  display: flex
-}
-
-.m-auto {
-  margin: auto
-}
-
-.justify-center {
-  justify-content: center
-}
-
-.flex-col {
-  flex-direction: column;
-  align-items: center;
-}
-
-.p-12 {
-  padding: 12px;
-}
-
-.mb-12 {
-  margin-bottom: 12px
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 </style>
