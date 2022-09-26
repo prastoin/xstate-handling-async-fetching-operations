@@ -6,9 +6,6 @@ export const handlers = [
   rest.get<undefined, Record<string, never>, FetchUserInformationResponseBody>(
     `${SERVER_ENDPOINT}/user-information`,
     (_req, res, ctx) => {
-      console.log("/user-information mock hit");
-      sessionStorage.setItem("is-authenticated", "true");
-
       const shouldFail = faker.datatype.boolean()
       if (shouldFail) {
         return res(
@@ -33,9 +30,6 @@ export const handlers = [
   rest.get<undefined, Record<string, never>, UserCart>(
     `${SERVER_ENDPOINT}/user-cart`,
     (_req, res, ctx) => {
-      console.log("/user-cart mock hit");
-      sessionStorage.setItem("is-authenticated", "true");
-
       const shouldFail = faker.datatype.boolean()
       if (shouldFail) {
         return res(

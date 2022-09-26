@@ -9,7 +9,6 @@ const { send: sendToCounterMachine, state: loadUserDataMachineState } =
   useMachine(loadUserInformationMachine);
 
 function loadUserInformationButtonOnClick() {
-  console.log("loadUserInformationButtonOnClick");
   sendToCounterMachine({
     type: "User pressed load user data button",
   });
