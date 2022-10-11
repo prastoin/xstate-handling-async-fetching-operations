@@ -1,11 +1,12 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import { worker } from "./mocks/browser";
 
 import "./assets/main.css";
 
-if (process.env.NODE_ENV === "development") {
-  const { worker } = await import("./mocks/browser");
-  worker.start();
-}
+// It's not recommended to include Mock Service Worker in production.
+// Doing so may lead to a distorted experience for your users.
+// See https://mswjs.io/docs/getting-started/integrate/browser#start-worker
+worker.start();
 
 createApp(App).mount("#app");
