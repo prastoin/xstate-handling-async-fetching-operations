@@ -20,3 +20,6 @@ export const FetchUserInformationResponseBody = UserInformation;
 export type FetchUserInformationResponseBody = z.infer<
   typeof FetchUserInformationResponseBody
 >;
+
+export const FetchUserCartResponseBody = UserCart;
+export type FetchUserCartResponseBody = z.infer<typeof UserCart>;

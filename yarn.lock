@@ -499,6 +499,19 @@
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.7.5.tgz#09fa51e356d07d0be200642b0e4f91d8e6dd408d"
   integrity sha512-V3BIhmY36fXZ1OtVcI9W+FxQqxVLsPKcNjWigIaa81dLC9IolJl5Mt4Cvhmr0flUnjSpTdrbMTSbXqYqV5dT6A==
 
+"@xstate/graph@^1.4.1":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@xstate/graph/-/graph-1.4.2.tgz#14987fc1f6d4cf11dca31fe5e6cb14e802f7b299"
+  integrity sha512-XIh6opCf9ukXRj4dXe2fv2kwFFUl15B5Ob8ELNOOqDXB2BPyNwp6TaLe5KJn/na3gzC9B7LyOo+2d0dPkC8PWQ==
+
+"@xstate/test@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@xstate/test/-/test-0.5.1.tgz#c3cf7c2f4c9b0527d562ac5663ea4cd0c8298f0b"
+  integrity sha512-Ltz46QR9QvEuhlNy+zvs+5ylfpGXzDBh+jVC1/WL8w88uEbN+Wf1bJ/Bi5OWVWWEgXJxfcmlavN4hJOqtQuqgQ==
+  dependencies:
+    "@xstate/graph" "^1.4.1"
+    chalk "^2.4.2"
+
 "@xstate/vue@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@xstate/vue/-/vue-2.0.0.tgz#bb95f91600c5fad2e8a72f872cb8f69b3b154e10"
@@ -806,7 +819,7 @@ chalk@4.1.1:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-chalk@^2.4.1:
+chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==

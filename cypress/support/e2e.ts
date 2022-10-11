@@ -15,6 +15,15 @@
 
 // Import commands.js using ES2015 syntax:
 import "./commands";
+import type { MswPayload } from "../../src/mocks/browser";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+declare global {
+  namespace Cypress {
+    interface ApplicationWindow {
+      msw: MswPayload;
+    }
+  }
+}
