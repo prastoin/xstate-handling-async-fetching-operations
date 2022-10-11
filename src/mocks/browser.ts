@@ -13,5 +13,10 @@ const mswPayload: MswPayload = {
   rest,
 };
 
-// @ts-ignore TODO improve this
+declare global {
+  interface Window {
+    msw: MswPayload;
+  }
+}
+
 window.msw = mswPayload;

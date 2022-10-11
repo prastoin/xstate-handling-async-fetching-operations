@@ -22,11 +22,19 @@ const testLoadUserDataMachine = createMachine({
         "Make both requests fail": {
           target: "Loading user data failed",
         },
+
+        "Make User Cart request failed": {
+          target: "Loading user data failed",
+        },
+
+        "Make User Information request failed": {
+          target: "Loading user data failed",
+        },
       },
 
       meta: {
         test: () => {
-          cy.get("template").should("contain", /Idle/i);
+          cy.contains(/Idle/i);
         },
       },
     },
@@ -34,20 +42,44 @@ const testLoadUserDataMachine = createMachine({
     "Loaded user data successfully": {
       meta: {
         test: function () {
-          cy.contains(/Reached final state/i);
+          cy.contains(/.*Reached final state.*/i);
         },
       },
     },
 
     "Loading user data failed": {
+      on: {
+        "User pressed retry button": {
+          target: "Loaded user data successfully",
+        },
+      },
+
       meta: {
-        test: function () {
-          cy.get('[data-cy="user-information-loading-container"]').contains(
-            /user.*information.*failed/i
-          );
-          cy.get('[data-cy="user-cart-loading-container"]').contains(
-            /user.*cart.*failed/i
-          );
+        test: function ({
+          loadUserCartShouldFail,
+          loadUserInformationShouldFail,
+        }: TestingContext) {
+          cy.get('[data-cy="retry-button"]');
+          
+          if (
+            loadUserCartShouldFail === false &&
+            loadUserInformationShouldFail === false
+          ) {
+            throw new Error(
+              "At least one of the request must be expected to fail"
+            );
+          }
+
+          if (loadUserInformationShouldFail) {
+            cy.get('[data-cy="user-information-loading-container"]').contains(
+              /user.*information.*failed/i
+            );
+          }
+          if (loadUserCartShouldFail) {
+            cy.get('[data-cy="user-cart-loading-container"]').contains(
+              /user.*cart.*failed/i
+            );
+          }
         },
       },
     },
@@ -61,10 +93,6 @@ type TestingContext = {
 
 const loadUserDataModel = createModel<TestingContext>(testLoadUserDataMachine, {
   events: {
-    "User pressed load user data button": function () {
-      cy.get('[data-cy="load-user-data-button"]').click();
-    },
-
     "Make both requests success": {
       exec: (context) => {
         cy.window()
@@ -144,18 +172,38 @@ const loadUserDataModel = createModel<TestingContext>(testLoadUserDataMachine, {
         cy.get('[data-cy="load-user-data-button"]').click();
       },
     },
+
+    "User pressed retry button": {
+      exec: (context) => {
+        cy.window()
+          .its("msw")
+          .then((msw) => {
+            const { worker, rest } = msw;
+
+            worker.use(
+              UserCartSuccessHandler(rest),
+              UserInformationSuccessHandler(rest)
+            );
+
+            context.loadUserCartShouldFail = false;
+            context.loadUserInformationShouldFail = false;
+          });
+
+        cy.get('[data-cy="retry-button"]').click();
+      },
+    },
   },
 });
 
 describe("Load user data", () => {
-  const testPlans = loadUserDataModel.getShortestPathPlans();
+  const testPlans = loadUserDataModel.getSimplePathPlans();
 
   testPlans.forEach((plan) => {
     describe(plan.description, () => {
       plan.paths.forEach((path) => {
         it(path.description, () => {
-          cy.visit("/").then(() => {
-            path.test({
+          return cy.visit("/").then(() => {
+            return path.test({
               loadUserCartShouldFail: undefined,
               loadUserInformationShouldFail: undefined,
             });
@@ -165,7 +213,9 @@ describe("Load user data", () => {
     });
   });
 
-  // it("should have full coverage", () => {
-  //   return loadUserDataModel.testCoverage();
-  // });
+  describe("coverage", () => {
+    it("should have full coverage", () => {
+      return loadUserDataModel.testCoverage();
+    });
+  });
 });

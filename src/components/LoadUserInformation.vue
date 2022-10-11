@@ -98,7 +98,7 @@ function getUserCartStatus(): StatusLabel {
               userInformationStatus === 'failed' || userCartStatus === 'failed'
             "
           >
-            <BaseButton @click="sendUserPressedLoadUserDataToMachine">
+            <BaseButton data-cy="retry-button" @click="sendUserPressedLoadUserDataToMachine">
               Retry
             </BaseButton>
           </template>
