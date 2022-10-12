@@ -8,5 +8,5 @@ export async function fetchUserInformation(): Promise<UserInformation> {
 
 export async function fetchUserCart(): Promise<UserCart> {
   const response = await axios.get(`${SERVER_ENDPOINT}/user-cart`);
-  return UserCart.parse(response.data)
+  return UserCart.parse(response.data);
 }

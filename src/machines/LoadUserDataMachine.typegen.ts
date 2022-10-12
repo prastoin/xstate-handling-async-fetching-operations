@@ -3,31 +3,31 @@
 export interface Typegen0 {
   "@@xstate/typegen": true;
   internalEvents: {
-    "done.invoke.loadUserInformationMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]": {
-      type: "done.invoke.loadUserInformationMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
+    "done.invoke.loadUserDataMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]": {
+      type: "done.invoke.loadUserDataMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
       data: unknown;
       __tip: "See the XState TS docs to learn how to strongly type this.";
     };
-    "done.invoke.loadUserInformationMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]": {
-      type: "done.invoke.loadUserInformationMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
+    "done.invoke.loadUserDataMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]": {
+      type: "done.invoke.loadUserDataMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
       data: unknown;
       __tip: "See the XState TS docs to learn how to strongly type this.";
     };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {
-    "Fetch user cart": "done.invoke.loadUserInformationMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
-    "Fetch user information": "done.invoke.loadUserInformationMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
+    "Fetch user cart": "done.invoke.loadUserDataMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
+    "Fetch user information": "done.invoke.loadUserDataMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
   };
   missingImplementations: {
     actions: never;
-    services: never;
+    services: "Fetch user information" | "Fetch user cart";
     guards: never;
     delays: never;
   };
   eventsCausingActions: {
-    "Assign loaded user cart to context": "done.invoke.loadUserInformationMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
-    "Assign loaded user information to context": "done.invoke.loadUserInformationMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
+    "Assign loaded user cart to context": "done.invoke.loadUserDataMachine.Load user data.Load user cart.Fetching user cart from server:invocation[0]";
+    "Assign loaded user information to context": "done.invoke.loadUserDataMachine.Load user data.Loading user information.Fetching user information from server:invocation[0]";
     "Reset machine context": "User pressed reset machine button";
   };
   eventsCausingServices: {

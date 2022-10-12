@@ -1,17 +1,21 @@
 <script setup lang="ts">
-export interface Props {
-  status: "failed" | "loading" | "success";
-}
-import { createLoadUserInformationMachine } from "@/machines/LoadUserInformationMachine";
 import { computed } from "vue";
 import { useMachine } from "@xstate/vue";
-import LoadingSection, { type StatusLabel } from "./kit/LoadingSection.vue";
 import BaseButton from "./kit/BaseButton.vue";
+import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
+import type { StatusLabel } from "@/type";
+import StatusSection from "./kit/StatusSection.vue";
+import { createLoadUserDataMachine } from "@/machines/LoadUserDataMachine";
 
-const loadUserInformationMachine = createLoadUserInformationMachine();
+const loadUserInformationMachine = createLoadUserDataMachine();
 
 const { send: sendToCounterMachine, state: loadUserDataMachineState } =
-  useMachine(loadUserInformationMachine);
+  useMachine(loadUserInformationMachine, {
+    services: {
+      "Fetch user information": async () => await fetchUserInformation(),
+      "Fetch user cart": async () => await fetchUserCart(),
+    },
+  });
 
 function sendUserPressedLoadUserDataToMachine() {
   sendToCounterMachine({
@@ -81,13 +85,13 @@ function getUserCartStatus(): StatusLabel {
       <template v-else>
         <!-- Loading -->
         <div class="flex flex-col justify-center items-start m-auto">
-          <LoadingSection
+          <StatusSection
             v-bind:status="userInformationStatus"
             label="User Information"
             test-id="user-information"
           />
 
-          <LoadingSection
+          <StatusSection
             v-bind:status="userCartStatus"
             label="User Cart"
             test-id="user-cart"
@@ -98,7 +102,10 @@ function getUserCartStatus(): StatusLabel {
               userInformationStatus === 'failed' || userCartStatus === 'failed'
             "
           >
-            <BaseButton data-cy="retry-button" @click="sendUserPressedLoadUserDataToMachine">
+            <BaseButton
+              data-cy="retry-button"
+              @click="sendUserPressedLoadUserDataToMachine"
+            >
               Retry
             </BaseButton>
           </template>
