@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import { createMachine } from "xstate";
 import { createModel } from "@xstate/test";
+import { createMachine } from "xstate";
 import {
   UserCartFailingHandler,
   UserCartSuccessHandler,
@@ -60,7 +60,7 @@ const testLoadUserDataMachine = createMachine({
           loadUserInformationShouldFail,
         }: TestingContext) {
           cy.get('[data-cy="retry-button"]');
-          
+
           if (
             loadUserCartShouldFail === false &&
             loadUserInformationShouldFail === false

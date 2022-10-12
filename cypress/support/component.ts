@@ -23,7 +23,7 @@ import "./commands";
 import "@/assets/main.css";
 
 import { mount } from "cypress/vue";
-import { worker } from "@/mocks/browser"
+import { worker } from "@/mocks/browser";
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -41,9 +41,9 @@ declare global {
 // msw
 before(() => {
   // worker.stop
-  worker.start()
-})
-beforeEach(() => worker.resetHandlers())
+  worker.start();
+});
+beforeEach(() => worker.resetHandlers());
 ///
 
 Cypress.Commands.add("mount", mount);
