@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { createLoadUserInformationMachine } from "@/machines/LoadUserInformationMachine";
 import { computed } from "vue";
 import { useMachine } from "@xstate/vue";
 import BaseButton from "./kit/BaseButton.vue";
 import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
 import type { StatusLabel } from "@/type";
 import StatusSection from "./kit/StatusSection.vue";
+import { createLoadUserDataMachine } from "@/machines/LoadUserDataMachine";
 
-const loadUserInformationMachine = createLoadUserInformationMachine();
+const loadUserInformationMachine = createLoadUserDataMachine();
 
 const { send: sendToCounterMachine, state: loadUserDataMachineState } =
   useMachine(loadUserInformationMachine, {

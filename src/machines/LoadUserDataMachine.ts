@@ -1,7 +1,7 @@
 import type { UserCart, UserInformation } from "@/type";
 import { assign, createMachine } from "xstate";
 
-type LoadUserInformationMachineEvents =
+type LoadUserDataMachineEvents =
   | {
       type: "User pressed load user data button";
     }
@@ -9,16 +9,16 @@ type LoadUserInformationMachineEvents =
       type: "User pressed reset machine button";
     };
 
-type LoadUserInformationMachineContext = {
+type LoadUserDataMachineContext = {
   userInformation?: UserInformation;
   userCart?: UserCart;
 };
 
-export const createLoadUserInformationMachine = () => {
+export const createLoadUserDataMachine = () => {
   return createMachine(
     {
-      id: "loadUserInformationMachine",
-      tsTypes: {} as import("./LoadUserInformationMachine.typegen").Typegen0,
+      id: "loadUserDataMachine",
+      tsTypes: {} as import("./LoadUserDataMachine.typegen").Typegen0,
       schema: {
         services: {} as {
           "Fetch user information": {
@@ -29,8 +29,8 @@ export const createLoadUserInformationMachine = () => {
             data: UserCart;
           };
         },
-        events: {} as LoadUserInformationMachineEvents,
-        context: {} as LoadUserInformationMachineContext,
+        events: {} as LoadUserDataMachineEvents,
+        context: {} as LoadUserDataMachineContext,
       },
       context: {
         userInformation: undefined,
@@ -55,6 +55,7 @@ export const createLoadUserInformationMachine = () => {
           states: {
             "Loading user information": {
               initial: "Fetching user information from server",
+
               states: {
                 "Fetching user information from server": {
                   tags: "Loading user information",
@@ -128,7 +129,7 @@ export const createLoadUserInformationMachine = () => {
         "Loaded user data": {
           on: {
             "User pressed reset machine button": {
-              target: "#loadUserInformationMachine.Idle",
+              target: "#loadUserDataMachine.Idle",
               actions: "Reset machine context",
             },
           },
