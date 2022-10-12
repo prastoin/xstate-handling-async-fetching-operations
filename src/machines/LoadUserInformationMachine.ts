@@ -1,12 +1,13 @@
-import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
 import type { UserCart, UserInformation } from "@/type";
 import { assign, createMachine } from "xstate";
 
-type LoadUserInformationMachineEvents = {
-  type: "User pressed load user data button";
-} | {
-  type: "User pressed reset machine button"
-};
+type LoadUserInformationMachineEvents =
+  | {
+      type: "User pressed load user data button";
+    }
+  | {
+      type: "User pressed reset machine button";
+    };
 
 type LoadUserInformationMachineContext = {
   userInformation?: UserInformation;
@@ -25,8 +26,8 @@ export const createLoadUserInformationMachine = () => {
             data: UserInformation;
           };
           "Fetch user cart": {
-            data: UserCart
-          }
+            data: UserCart;
+          };
         },
         events: {} as LoadUserInformationMachineEvents,
         context: {} as LoadUserInformationMachineContext,
@@ -48,15 +49,13 @@ export const createLoadUserInformationMachine = () => {
         "Load user data": {
           type: "parallel",
           onDone: {
-            target: "Loaded user data"
+            target: "Loaded user data",
           },
 
           states: {
-
             "Loading user information": {
               initial: "Fetching user information from server",
               states: {
-
                 "Fetching user information from server": {
                   tags: "Loading user information",
 
@@ -86,13 +85,12 @@ export const createLoadUserInformationMachine = () => {
                 "Loaded user information": {
                   type: "final",
                 },
-              }
+              },
             },
 
             "Load user cart": {
               initial: "Fetching user cart from server",
               states: {
-
                 "Fetching user cart from server": {
                   tags: "Loading user cart",
 
@@ -122,20 +120,19 @@ export const createLoadUserInformationMachine = () => {
                 "Loaded user cart": {
                   type: "final",
                 },
-              }
-            }
-          }
+              },
+            },
+          },
         },
 
         "Loaded user data": {
-
           on: {
             "User pressed reset machine button": {
               target: "#loadUserInformationMachine.Idle",
-              actions: "Reset machine context"
-            }
-          }
-        }
+              actions: "Reset machine context",
+            },
+          },
+        },
       },
     },
     {
@@ -147,20 +144,14 @@ export const createLoadUserInformationMachine = () => {
         }),
         "Assign loaded user cart to context": assign({
           userCart: (_context, event) => {
-            return event.data
-          }
+            return event.data;
+          },
         }),
 
         "Reset machine context": assign({
           userCart: (_context, _event) => undefined,
-          userInformation: (_context, _event) => undefined
-        })
-      },
-      services: {
-        "Fetch user information": async () =>
-          await fetchUserInformation(),
-        "Fetch user cart": async () =>
-          await fetchUserCart()
+          userInformation: (_context, _event) => undefined,
+        }),
       },
     }
   );

@@ -7,11 +7,19 @@ import { computed } from "vue";
 import { useMachine } from "@xstate/vue";
 import LoadingSection, { type StatusLabel } from "./kit/LoadingSection.vue";
 import BaseButton from "./kit/BaseButton.vue";
+import { fetchUserCart, fetchUserInformation } from "@/services/UserService";
 
 const loadUserInformationMachine = createLoadUserInformationMachine();
 
 const { send: sendToCounterMachine, state: loadUserDataMachineState } =
-  useMachine(loadUserInformationMachine);
+  useMachine(loadUserInformationMachine, {
+      services: {
+        "Fetch user information": async () =>
+          await fetchUserInformation(),
+        "Fetch user cart": async () =>
+          await fetchUserCart()
+      },
+  });
 
 function sendUserPressedLoadUserDataToMachine() {
   sendToCounterMachine({
@@ -98,7 +106,10 @@ function getUserCartStatus(): StatusLabel {
               userInformationStatus === 'failed' || userCartStatus === 'failed'
             "
           >
-            <BaseButton data-cy="retry-button" @click="sendUserPressedLoadUserDataToMachine">
+            <BaseButton
+              data-cy="retry-button"
+              @click="sendUserPressedLoadUserDataToMachine"
+            >
               Retry
             </BaseButton>
           </template>

@@ -21,7 +21,7 @@ export interface Typegen0 {
   };
   missingImplementations: {
     actions: never;
-    services: never;
+    services: "Fetch user information" | "Fetch user cart";
     guards: never;
     delays: never;
   };
