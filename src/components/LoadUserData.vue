@@ -64,71 +64,66 @@ const userCartStatus = computed(() => getUserCartStatus());
 
 <template>
   <main class="flex flex-col justify-start items-center mt-6">
-    <div data-cy="machine-current-value">
-      {{ loadUserDataMachineState.value }}
-    </div>
-    <div class="flex flex-col">
-      <template v-if="showLoadUserDataButton">
-        <h4>Will be downloaded:</h4>
-        <ul class="list-disc">
-          <li>User Information (id, name, email, etc.)</li>
-          <li>User Cart (items, credit, etc.)</li>
-        </ul>
-        <BaseButton
-          data-cy="load-user-data-button"
-          @click="sendUserPressedLoadUserDataToMachine"
-        >
-          Load user Data
-        </BaseButton>
-      </template>
+    <template v-if="showLoadUserDataButton">
+      <h4>Will be downloaded:</h4>
+      <ul class="list-disc">
+        <li>User Information (id, name, email, etc.)</li>
+        <li>User Cart (items, credit, etc.)</li>
+      </ul>
+      <BaseButton
+        data-cy="load-user-data-button"
+        @click="sendUserPressedLoadUserDataToMachine"
+      >
+        Load user Data
+      </BaseButton>
+    </template>
 
-      <template v-else>
-        <!-- Loading -->
-        <div class="flex flex-col justify-center items-start m-auto">
-          <StatusSection
-            v-bind:status="userInformationStatus"
-            label="User Information"
-            test-id="user-information"
-          />
+    <template v-else>
+      <!-- Loading -->
+      <div class="flex flex-col justify-center items-start m-auto">
+        <StatusSection
+          v-bind:status="userInformationStatus"
+          label="User Information"
+          test-id="user-information"
+        />
 
-          <StatusSection
-            v-bind:status="userCartStatus"
-            label="User Cart"
-            test-id="user-cart"
-          />
+        <StatusSection
+          v-bind:status="userCartStatus"
+          label="User Cart"
+          test-id="user-cart"
+        />
 
-          <template
-            v-if="
-              userInformationStatus === 'failed' || userCartStatus === 'failed'
-            "
-          >
-            <BaseButton
-              data-cy="retry-button"
-              @click="sendUserPressedLoadUserDataToMachine"
-            >
-              Retry
-            </BaseButton>
-          </template>
-        </div>
-
-        <!-- Loaded -->
         <template
           v-if="
-            userInformationStatus === 'success' && userCartStatus === 'success'
+            userInformationStatus === 'failed' || userCartStatus === 'failed'
           "
         >
-          <span class="mb-2">Reached final state</span>
-          <span class="mb-2">{{
-            loadUserDataMachineState.context.userInformation
-          }}</span>
-          <span class="mb-2">{{
-            loadUserDataMachineState.context.userCart
-          }}</span>
-          <BaseButton @click="sendResetContextToMachine">
-            Reset the machine
+          <BaseButton
+            data-cy="retry-button"
+            @click="sendUserPressedLoadUserDataToMachine"
+          >
+            Retry
           </BaseButton>
         </template>
+      </div>
+
+      <!-- Loaded -->
+      <template
+        v-if="
+          userInformationStatus === 'success' && userCartStatus === 'success'
+        "
+      >
+        <span class="mb-2">Reached final state</span>
+        <span class="mb-2">{{
+          loadUserDataMachineState.context.userInformation
+        }}</span>
+        <span class="mb-2">{{
+          loadUserDataMachineState.context.userCart
+        }}</span>
+        <BaseButton @click="sendResetContextToMachine">
+          Reset the machine
+        </BaseButton>
       </template>
-    </div>
+    </template>
   </main>
 </template>
