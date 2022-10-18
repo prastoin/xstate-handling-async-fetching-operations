@@ -9,7 +9,7 @@ import { createLoadUserDataMachine } from "@/machines/LoadUserDataMachine";
 
 const loadUserInformationMachine = createLoadUserDataMachine();
 
-const { send: sendToCounterMachine, state: loadUserDataMachineState } =
+const { send: sendToLoadUserDataMachine, state: loadUserDataMachineState } =
   useMachine(loadUserInformationMachine, {
     services: {
       "Fetch user information": async () => await fetchUserInformation(),
@@ -18,13 +18,13 @@ const { send: sendToCounterMachine, state: loadUserDataMachineState } =
   });
 
 function sendUserPressedLoadUserDataToMachine() {
-  sendToCounterMachine({
+  sendToLoadUserDataMachine({
     type: "User pressed load user data button",
   });
 }
 
 function sendResetContextToMachine() {
-  sendToCounterMachine({
+  sendToLoadUserDataMachine({
     type: "User pressed reset machine button",
   });
 }
@@ -48,7 +48,6 @@ function getUserInformationStatus(): StatusLabel {
 }
 const userInformationStatus = computed(() => getUserInformationStatus());
 
-const userCartStatus = computed(() => getUserCartStatus());
 function getUserCartStatus(): StatusLabel {
   if (loadUserDataMachineState.value.hasTag("Loading user cart failed")) {
     return "failed";
@@ -60,6 +59,7 @@ function getUserCartStatus(): StatusLabel {
 
   return "success";
 }
+const userCartStatus = computed(() => getUserCartStatus());
 </script>
 
 <template>
