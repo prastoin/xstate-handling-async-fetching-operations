@@ -8,11 +8,11 @@ jobs:
   install:
     runs-on: ubuntu-latest
     container:
-      image: cypress/browsers:node18.6.0-chrome105-ff104
+      image: cypress/browsers:node16.13.0-chrome95-ff94
       options: --user 1001 # ← https://github.com/cypress-io/github-action/issues/446#issuecomment-987015822
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cypress install
         uses: cypress-io/github-action@v4
@@ -22,26 +22,26 @@ jobs:
           build: yarn build
 
       - name: Save build folder
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: build
+          name: dist
           if-no-files-found: error
-          path: build
+          path: dist
   ui-chrome-tests:
     runs-on: ubuntu-latest
-    container: cypress/browsers:node18.6.0-chrome105-ff104
+    container: cypress/browsers:node16.13.0-chrome95-ff94
     needs: install
     strategy:
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download the build folders
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          name: build
-          path: build
+          name: dist
+          path: dist
 
       - name: "e2e tests - Chrome"
         uses: cypress-io/github-action@v4
