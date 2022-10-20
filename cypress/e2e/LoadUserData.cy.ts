@@ -34,7 +34,7 @@ const testLoadUserDataMachine = createMachine({
 
       meta: {
         test: () => {
-          cy.contains(/Idle/i);
+          cy.contains(/.*Will.*be.*downloaded.*/i);
         },
       },
     },

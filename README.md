@@ -1,59 +1,29 @@
-# .
+# Handling async operations with XState
 
-This template should help get you started developing with Vue 3 in Vite.
+This repo illustrates the following [article](http://paul.rastoin.dev/writing/posts/xstate-handling-async-operations).
+It contains a working and tested `Vue3` + `XState` implementation of XState `promises invocations` and `parallel states` usage, in this case by fetching several content at the same time.
+It's tested using `@xstate/test` and `Cypress` within e2e tests.
 
-## Recommended IDE Setup
+## Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### Install deps
 
-## Type Support for `.vue` Imports in TS
+Install dependencies with yarn by running
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```bash
+yarn
 ```
 
-### Compile and Hot-Reload for Development
+### Starting the app in local
 
-```sh
-npm run dev
+```bash
+yarn dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 🧞 Commands
 
-```sh
-npm run build
-```
-
-### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
-
-```sh
-npm run test:unit # or `npm run test:unit:ci` for headless testing
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run build
-npm run test:e2e # or `npm run test:e2e:ci` for headless testing
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+| Command            | Action                              |
+| :----------------- | :---------------------------------- |
+| `yarn dev`         | Starts the app in local             |
+| `yarn test:e2e`    | Run e2e tests using the cypress GUI |
+| `yarn test:e2e:ci` | Run e2e tests in the terminal       |

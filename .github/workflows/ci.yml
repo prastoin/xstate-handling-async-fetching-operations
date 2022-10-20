@@ -5,16 +5,50 @@ on:
     branches:
       - main
 jobs:
-  cypress-run:
+  install:
     runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:node16.13.0-chrome95-ff94
+      options: --user 1001 # ← https://github.com/cypress-io/github-action/issues/446#issuecomment-987015822
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run e2e tests
+        uses: actions/checkout@v3
+
+      - name: Cypress install
         uses: cypress-io/github-action@v4
         with:
+          # Disable running of tests within install job
+          runTests: false
           build: yarn build
+
+      - name: Save build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          if-no-files-found: error
+          path: dist
+  ui-chrome-tests:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node16.13.0-chrome95-ff94
+    needs: install
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download the build folders
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+
+      - name: "e2e tests - Chrome"
+        uses: cypress-io/github-action@v4
+        with:
+          install: true
           start: yarn test:e2e:ci
+          wait-on: "http://localhost:4173"
+          wait-on-timeout: 120
           browser: chrome
+          record: false

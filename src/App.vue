@@ -14,14 +14,27 @@ export default {
     <h1 class="text-3xl font-bold underline">
       XState handling async operations invoking Promises
     </h1>
-    <small
-      >See related
-      <a
-        class="underline"
-        href="https://xstate.js.org/docs/guides/communication.html#invoking-promises"
-        >Documentation</a
-      ></small
-    >
+
+    <section class="flex flex-col">
+      <small
+        >See related
+        <a
+          class="underline"
+          href="http://paul.rastoin.dev/writing/posts/xstate-handling-async-operations"
+          >Article</a
+        >
+      </small>
+
+      <small>
+        Check the code on
+        <a
+          class="underline"
+          href="https://github.com/prastoin/xstate-handling-async-fetching-operations"
+        >
+          GitHub
+        </a>
+      </small>
+    </section>
   </header>
   <LoadUserData />
 </template>
