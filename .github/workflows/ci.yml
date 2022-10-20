@@ -46,8 +46,7 @@ jobs:
       - name: "e2e tests - Chrome"
         uses: cypress-io/github-action@v4
         with:
-          # we have already installed all dependencies above
-          install: false
+          install: true
           start: yarn test:e2e:ci
           wait-on: "http://localhost:4173"
           wait-on-timeout: 120
